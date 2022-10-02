@@ -1,6 +1,8 @@
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import React, { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import { OAuth } from "../components";
 
 const ForgotPassword = () => {
@@ -10,8 +12,19 @@ const ForgotPassword = () => {
     setEmail(event.target.value)
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
+
+try{
+
+  const auth = getAuth();
+  await sendPasswordResetEmail(auth ,email);
+  toast.success("Email was send");
+
+}catch(error){
+  toast.error("failed to forget")
+}
+
   };
   return (
     <section className="max-w-6xl mx-auto">
@@ -57,9 +70,8 @@ const ForgotPassword = () => {
                 </Link>
               </p>
             </div>
-          </form>
 
-          <button
+            <button
             type="submit"
             className="w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase rounded shadow-md hover:bg-blue-700  transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800"
           >
@@ -75,6 +87,9 @@ const ForgotPassword = () => {
           </div>
 
           <OAuth/>
+          </form>
+
+          
 
         </div>
       </div>
