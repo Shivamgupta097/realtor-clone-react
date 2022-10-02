@@ -5,10 +5,7 @@ import {Headers} from "./components";
 function App() {
   return (
     <Router>
-
       <Headers/>
-
-
       <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/profile" element={<Profile/>}/>
