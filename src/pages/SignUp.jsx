@@ -1,26 +1,62 @@
 import React, { useState } from "react";
+import { getAuth, createUserWithEmailAndPassword ,updateProfile} from "firebase/auth";
+import { db } from "../firebase";
+
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link , Navigate, useNavigate} from "react-router-dom";
 import { OAuth } from "../components";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    fullName:"",
+    fullName: "",
     email: "",
     password: "",
   });
 
-  const {fullName, email, password } = formData;
+  const { fullName, email, password } = formData;
 
   const inputChangeHandler = (event) => {
     let { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
+    console.log("sub");
     event.preventDefault();
+
+
+    try {
+    const auth = getAuth();
+
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+
+    updateProfile(auth.currentUser, {
+        displayName:fullName,
+    })
+      console.log(userCredential.user);
+
+      const user = userCredential.user;
+      const formDataCopy = {...formData};
+      delete formDataCopy.password;
+      formDataCopy.timestamp = serverTimestamp();
+
+      await setDoc(doc(db , "users" , user.uid) , formDataCopy);
+      navigate("/")
+      toast.success("signUp successfull")
+    } catch (error) {
+      console.log(error.code);
+      toast.error(error.code);
+    }
   };
   return (
     <section className="max-w-6xl mx-auto">
@@ -35,11 +71,10 @@ const SignUp = () => {
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%]">
           <form onSubmit={handleSubmit}>
-
-          <input
+            <input
               type="text"
               name="fullName"
-              value={fullName}  
+              value={fullName}
               onChange={inputChangeHandler}
               placeholder="Full Name"
               className="mb-6 w-full px-4 py-2 text-xl text-grey-700 bg-white border-gray-300 rounded transition ease-in-out "
@@ -95,25 +130,24 @@ const SignUp = () => {
                 </Link>
               </p>
             </div>
-          </form>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase rounded shadow-md hover:bg-blue-700  transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800"
-          >
-            Sign In
-          </button>
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white px-7 py-3 text-sm font-medium uppercase rounded shadow-md hover:bg-blue-700  transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800"
+            >
+              Sign Up
+            </button>
 
-          <div
-            className="flex items-center my-4 before:border-t before:flex-1 before:border-gray-300
+            <div
+              className="flex items-center my-4 before:border-t before:flex-1 before:border-gray-300
           after:border-t after:flex-1 after:border-gray-300
           "
-          >
-            <p className="text-center font-semibold mx-4">OR</p>
-          </div>
+            >
+              <p className="text-center font-semibold mx-4">OR</p>
+            </div>
 
-          <OAuth/>
-
+            <OAuth />
+          </form>
         </div>
       </div>
     </section>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {getAuth, createUserWithEmailAndPassword} from "firebase/auth"
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { OAuth } from "../components";
@@ -20,7 +21,15 @@ const SignIn = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+
+   
+
   };
+
+
+
+
   return (
     <section className="max-w-6xl mx-auto">
       <h1 className="text-3xl text-center mt-6 font-bold">Sign In</h1>
