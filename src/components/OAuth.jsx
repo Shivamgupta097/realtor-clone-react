@@ -2,8 +2,9 @@ import {FcGoogle} from "react-icons/fc";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { useNavigate } from "react-router-dom";
 const OAuth = () => {
-    const navigate = use
+    const navigate = useNavigate();
 
     const googleSignIn = async() =>{
         try{
@@ -23,7 +24,11 @@ const OAuth = () => {
                     email: user.email,
                     timestamp :serverTimestamp(),
                 })
+
             }
+            navigate("/")
+
+
         }catch(error){
             console.log(error);
         }
