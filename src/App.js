@@ -1,10 +1,21 @@
-
+import {BrowserRouter as Router , Routes ,Route} from "react-router-dom";
+import {Home, Profile, SignIn, SignUp, ForgotPassword , Offers} from "./pages";
 
 function App() {
   return (
-    <div className="App">
-      Hello workd
-    </div>
+    <Router>
+
+      <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/profile" element={<Profile/>}/>
+        <Route path="/sign-n" element={<SignIn/>}/>
+        <Route path="/sign-up" element={<SignUp/>}/>
+        <Route path="/forgot-password" element={<ForgotPassword/>}/>
+        <Route path="/offers" element={<Offers/>}/>
+
+
+      </Routes>
+    </Router>
   );
 }
 
